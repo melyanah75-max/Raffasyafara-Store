@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raffasyafara Store - Dashboard Penjual</title>
+    <!-- Pustaka Chart.js untuk Grafik -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ==========================================================================
+           1. GLOBAL STYLES & VARIABLES (Tema Gelap, Ungu, Abu-abu)
+           ========================================================================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #0b0713;
+            /* Hitam keunguan sangat gelap */
+            --bg-secondary: #161026;
+            /* Abu-abu keunguan gelap untuk sidebar/card */
+            --bg-tertiary: #221a35;
+            /* Elemen interaktif/hover */
+            --color-primary: #9d4edf;
+            /* Ungu Utama (Accent) */
+            --color-primary-hover: #b166ef;
+            --color-text-main: #f3f0f7;
+            /* Putih keabu-abuan terang */
+            --color-text-muted: #a69fb5;
+            /* Abu-abu teks */
+            --color-success: #00b4d8;
+            /* Aksen Cyan/Biru Sukses */
+            --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-smooth: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--color-text-main);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Layout Utama Menggunakan Table Tradisional untuk Stabilitas Render Tanpa Flex/Grid */
+        .layout-table {
+            display: table;
+            width: 100%;
+            height: 100vh;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .layout-row {
+            display: table-row;
+        }
+
+        /* ==========================================================================
+           2. SIDEBAR STYLES (Responsif & Collapsible)
+           ========================================================================== */
+        .sidebar-cell {
+            display: table-cell;
+            width: 260px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid rgba(157, 78, 223, 0.1);
+            vertical-align: top;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 15pt;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .sidebar-brand span {
+            color: var(--color-primary);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 14px;
+        }
+
+        .menu-item {
+            margin-bottom: 8px;
+        }
+
+        .menu-link {
+            display: block;
+            padding: 12px 16px;
+            font-size: 11pt;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
+        }
+
+        .menu-link:hover,
+        .menu-link.active {
+            color: var(--color-text-main);
+            background-color: var(--bg-tertiary);
+        }
+
+        .menu-link.active {
+            background-color: var(--color-primary);
+            box-shadow: 0 4px 15px rgba(157, 78, 223, 0.3);
+        }
+
+        .menu-icon {
+            display: inline-block;
+            width: 20px;
+            margin-right: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* ==========================================================================
+           3. CONTENT CONTAINER (Top Bar & Main Content)
+           ========================================================================== */
+        .content-cell {
+            display: table-cell;
+            vertical-align: top;
+            background-color: var(--bg-primary);
+        }
+
+        /* Top Bar */
+        .topbar {
+            background-color: var(--bg-secondary);
+            height: 70px;
+            padding: 0 30px;
+            border-bottom: 1px solid rgba(157, 78, 223, 0.1);
+            display: table;
+            width: 100%;
+        }
+
+        .topbar-wrapper {
+            display: table-row;
+        }
+
+        .topbar-left,
+        .topbar-right {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .topbar-left {
+            text-align: left;
+        }
+
+        .topbar-right {
+            text-align: right;
+        }
+
+        /* Hamburger Button (Mobile Only) */
+        .sidebar-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--color-text-main);
+            font-size: 18pt;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .profile-info {
+            display: inline-block;
+            margin-right: 20px;
+            vertical-align: middle;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            font-size: 11pt;
+        }
+
+        .profile-role {
+            display: block;
+            font-size: 9pt;
+            color: var(--color-text-muted);
+            text-align: right;
+        }
+
+        .btn-logout {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            font-size: 10pt;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            vertical-align: middle;
+        }
+
+        .btn-logout:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+
+        /* Main Scrollable Area */
+        .main-content {
+            padding: 30px;
+            max-height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-size: 18pt;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        /* ==========================================================================
+           4. RINGKASAN CARD STATUS (Metrics)
+           ========================================================================== */
+        .metrics-table {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 20px 0;
+            margin: 0 -20px 30px -20px;
+        }
+
+        .metric-cell {
+            display: table-cell;
+            width: 33.333%;
+        }
+
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--color-primary);
+        }
+
+        .metric-card.success::after {
+            background-color: var(--color-success);
+        }
+
+        .metric-title {
+            font-size: 10pt;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 20pt;
+            font-weight: 700;
+            color: var(--color-text-main);
+            line-height: 1.2;
+        }
+
+        .metric-sub {
+            font-size: 9pt;
+            color: var(--color-success);
+            margin-top: 6px;
+        }
+
+        /* ==========================================================================
+           5. CHART SECTION (Grafik Penjualan)
+           ========================================================================== */
+        .charts-table {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 20px 0;
+            margin: 0 -20px 30px -20px;
+        }
+
+        .chart-cell {
+            display: table-cell;
+            width: 50%;
+        }
+
+        .chart-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .chart-header {
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 12pt;
+            font-weight: 700;
+        }
+
+        .chart-caption {
+            font-size: 9.5pt;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 240px;
+            width: 100%;
+        }
+
+        /* ==========================================================================
+           6. TABEL TRANSAKSI TERBARU
+           ========================================================================== */
+        .table-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .table-title {
+            font-size: 12pt;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .responsive-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 14px 16px;
+            font-size: 10.5pt;
+        }
+
+        .data-table th {
+            background-color: rgba(255, 255, 255, 0.02);
+            color: var(--color-text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            font-size: 9pt;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--color-text-main);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        /* Badge Status */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 8.5pt;
+            font-weight: 700;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background-color: rgba(0, 180, 216, 0.15);
+            color: var(--color-success);
+        }
+
+        .badge-pending {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        /* Overlay gelap latar saat menu mobile aktif */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 7, 19, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 998;
+        }
+
+        /* ==========================================================================
+           7. RESPONSIVE DESIGN (MEDIA QUERIES)
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .charts-table {
+                display: block;
+                margin: 0 0 20px 0;
+            }
+
+            .chart-cell {
+                display: block;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .chart-cell:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            /* Transform Tabel Utama Menjadi Posisi Fixed untuk Sidebar Hambatan */
+            .sidebar-cell {
+                position: fixed;
+                top: 0;
+                left: -260px;
+                height: 100vh;
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar-cell.open {
+                left: 0;
+            }
+
+            .sidebar-toggle {
+                display: inline-block;
+                margin-right: 16px;
+                vertical-align: middle;
+            }
+
+            .metrics-table {
+                display: block;
+                margin: 0 0 20px 0;
+            }
+
+            .metric-cell {
+                display: block;
+                width: 100%;
+                margin-bottom: 16px;
+            }
+
+            .metric-cell:last-child {
+                margin-bottom: 0;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .profile-role {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Overlay Latar Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="layout-table">
+        <div class="layout-row">
+
+            <!-- ==========================================================================
+               1. SIDEBAR COMPONENT (Collapsible)
+               ========================================================================== -->
+            <aside class="sidebar-cell" id="sidebarNode">
+                <div class="sidebar-brand">
+                    Raffasyafara<span>Store</span>
+                </div>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="#" class="menu-link active">
+                            <span class="menu-icon">☷</span>Dashboard
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="dummyAlert('Halaman Produk')">
+                            <span class="menu-icon">📦</span>Produk
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="dummyAlert('Halaman Transaksi')">
+                            <span class="menu-icon">⇄</span>Transaksi
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="dummyAlert('Halaman Laporan')">
+                            <span class="menu-icon">📊</span>Laporan
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="#" class="menu-link" onclick="dummyAlert('Halaman Pengaturan')">
+                            <span class="menu-icon">⚙</span>Pengaturan
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- ==========================================================================
+               CONTAINER SISI KANAN (Top Bar + Konten Utama)
+               ========================================================================== -->
+            <div class="content-cell">
+
+                <!-- 2. TOP BAR -->
+                <header class="topbar">
+                    <div class="topbar-wrapper">
+                        <div class="topbar-left">
+                            <button class="sidebar-toggle" id="sidebarToggle" aria-label="Buka Sidebar">☰</button>
+                            <span style="font-weight: 500; color: var(--color-text-muted); font-size: 11pt;"
+                                id="greetingText">Selamat datang kembali</span>
+                        </div>
+                        <div class="topbar-right">
+                            <div class="profile-info">
+                                <span class="profile-name">Raffa Syafara</span>
+                                <span class="profile-role">Pemilik Toko</span>
+                            </div>
+                            <button class="btn-logout" onclick="logoutAction()">Keluar</button>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- 3. KONTEN UTAMA -->
+                <main class="main-content">
+                    <h1 class="page-title">Ringkasan Performa</h1>
+
+                    <!-- RINGKASAN DALAM BENTUK CARD METRICS -->
+                    <div class="metrics-table">
+                        <!-- Card 1: Total Penjualan -->
+                        <div class="metric-cell">
+                            <div class="metric-card">
+                                <div class="metric-title">Total Penjualan</div>
+                                <div class="metric-value">Rp 14.250.000</div>
+                                <div class="metric-sub">▲ +12.4% bulan ini</div>
+                            </div>
+                        </div>
+                        <!-- Card 2: Total Transaksi -->
+                        <div class="metric-cell">
+                            <div class="metric-card success">
+                                <div class="metric-title">Total Transaksi</div>
+                                <div class="metric-value">186 Transaksi</div>
+                                <div class="metric-sub">▲ +8.2% minggu ini</div>
+                            </div>
+                        </div>
+                        <!-- Card 3: Produk Terjual -->
+                        <div class="metric-cell">
+                            <div class="metric-card">
+                                <div class="metric-title">Produk Terjual</div>
+                                <div class="metric-value">342 Item</div>
+                                <div class="metric-sub">Aset digital terkirim</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==========================================================================
+                       4. CHART RINGKASAN (Menggunakan Chart.js)
+                       ========================================================================== -->
+                    <div class="charts-table">
+                        <!-- Chart 1: 1 Bulan Terakhir -->
+                        <div class="chart-cell">
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h2 class="chart-title">Tren Penjualan Bulanan</h2>
+                                    <p class="chart-caption">Grafik akumulasi pendapatan kotor dalam kurun waktu 30 hari
+                                        terakhir.</p>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="monthlyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Chart 2: 1 Minggu Terakhir -->
+                        <div class="chart-cell">
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h2 class="chart-title">Aktivitas Transaksi Mingguan</h2>
+                                    <p class="chart-caption">Statistik volume transaksi harian yang masuk dari hari
+                                        Senin hingga Minggu.</p>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="weeklyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==========================================================================
+                       5. TABEL TRANSAKSI TERBARU (Dummy Data)
+                       ========================================================================== -->
+                    <div class="table-card">
+                        <h2 class="table-title">Riwayat Transaksi Terbaru</h2>
+                        <div class="responsive-table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Produk</th>
+                                        <th>Email Pembeli</th>
+                                        <th>Nomor HP</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="font-family: monospace; font-weight: 600;">DE-1718251241100</td>
+                                        <td>Paket Bundling Kuliner Digital</td>
+                                        <td>budi.santoso@gmail.com</td>
+                                        <td>081234567890</td>
+                                        <td><span class="badge badge-success">Berhasil</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-family: monospace; font-weight: 600;">DE-1718251352400</td>
+                                        <td>E-Book Premium Masterclass Kopi</td>
+                                        <td>citra.lestari@yahoo.com</td>
+                                        <td>085711223344</td>
+                                        <td><span class="badge badge-success">Berhasil</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-family: monospace; font-weight: 600;">DE-1718251493200</td>
+                                        <td>Video Kursus Rahasia Keripik Renyah</td>
+                                        <td>andika.pratama@gmail.com</td>
+                                        <td>089988776655</td>
+                                        <td><span class="badge badge-pending">Pending</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-family: monospace; font-weight: 600;">DE-1718251525900</td>
+                                        <td>E-Book Premium Masterclass Kopi</td>
+                                        <td>dewi.puspita@outlook.com</td>
+                                        <td>081344556677</td>
+                                        <td><span class="badge badge-success">Berhasil</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-family: monospace; font-weight: 600;">DE-1718251610400</td>
+                                        <td>Paket Bundling Kuliner Digital</td>
+                                        <td>eko.prasetyo@gmail.com</td>
+                                        <td>082155667788</td>
+                                        <td><span class="badge badge-success">Berhasil</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       JAVASCRIPT VANILLA LOGIC & CHART INITIALIZATION
+       ========================================================================== -->
+    <script>
+        /* --------------------------------------------------------------------------
+           A. SIDEBAR RESPONSIVE COLLAPSIBLE LOGIC
+           -------------------------------------------------------------------------- */
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarNode = document.getElementById('sidebarNode');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebarNode.classList.toggle('open');
+            sidebarOverlay.classList.toggle('show');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        /* --------------------------------------------------------------------------
+           B. CHART.JS CONFIGURATION (TEMA UNGU & SLATE)
+           -------------------------------------------------------------------------- */
+        // Set Default Font Color Global untuk Chart.js agar sesuai tema gelap
+        Chart.defaults.color = '#a69fb5';
+        Chart.defaults.font.family = "'Segoe UI', sans-serif";
+
+        // 1. Inisialisasi Chart 1 Bulan Terakhir (Line Chart)
+        const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctxMonthly, {
+            type: 'line',
+            data: {
+                labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                datasets: [{
+                    label: 'Pendapatan (Rp)',
+                    data: [2800000, 3900000, 3100000, 4450000],
+                    borderColor: '#9d4edf',
+                    backgroundColor: 'rgba(157, 78, 223, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#b166ef',
+                    pointBorderColor: '#161026',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            callback: function (value) {
+                                return 'Rp ' + (value / 1000000) + 'jt';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 2. Inisialisasi Chart 1 Minggu Terakhir (Bar Chart)
+        const ctxWeekly = document.getElementById('weeklyChart').getContext('2d');
+        new Chart(ctxWeekly, {
+            type: 'bar',
+            data: {
+                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                datasets: [{
+                    label: 'Jumlah Transaksi',
+                    data: [18, 24, 15, 29, 34, 42, 24],
+                    backgroundColor: '#00b4d8',
+                    borderRadius: 6,
+                    hoverBackgroundColor: '#00d4ff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { stepSize: 10 }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        /* --------------------------------------------------------------------------
+           C. DUMMY ACTIONS (INTERAKTIF ELEMENT)
+           -------------------------------------------------------------------------- */
+        function dummyAlert(namaHalaman) {
+            alert("Fitur Navigasi Simulasi: Anda menekan menu '" + namaHalaman + "'. Pada sistem production asli, aksi ini akan memuat komponen atau memindahkan rute URL.");
+        }
+
+        function logoutAction() {
+            if (confirm("Apakah Anda yakin ingin keluar dari Dashboard Penjual Raffasyafara Store?")) {
+                alert("Simulasi Berhasil: Sesi akun telah dihapus. Mengarahkan kembali ke halaman utama toko.");
+            }
+        }
+
+        // Dinamisasi Teks Sapaan Berdasarkan Waktu Real-time
+        const hours = new Date().getHours();
+        const greetingText = document.getElementById('greetingText');
+        if (hours < 11) greetingText.innerText = "Selamat pagi, Raffa Syafara";
+        else if (hours < 15) greetingText.innerText = "Selamat siang, Raffa Syafara";
+        else if (hours < 19) greetingText.innerText = "Selamat sore, Raffa Syafara";
+        else greetingText.innerText = "Selamat malam, Raffa Syafara";
+    </script>
+</body>
+
+</html>

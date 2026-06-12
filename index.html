@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raffasyafara Store - E-Commerce Produk Digital</title>
+    <!-- Snap.js dari Midtrans Sandbox -->
+    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="SB-Mid-client-jVar2J_b-T8Dbm9Q"></script>
+    <style>
+        /* ==========================================================================
+           1. GLOBAL STYLES & VARIABLES (Tema Gelap, Ungu, Abu-abu)
+           ========================================================================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #0b0713;
+            /* Hitam keunguan sangat gelap */
+            --bg-secondary: #161026;
+            /* Abu-abu keunguan gelap untuk card/navbar */
+            --bg-tertiary: #221a35;
+            /* Variasi warna elemen interaktif */
+            --color-primary: #9d4edf;
+            /* Ungu Utama (Accent) */
+            --color-primary-hover: #b166ef;
+            --color-text-main: #f3f0f7;
+            /* Putih keabu-abuan terang */
+            --color-text-muted: #a69fb5;
+            /* Abu-abu teks */
+            --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-smooth: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(157, 78, 223, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-primary);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Container universal */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Tombol Komponen */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            font-size: 14pt;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(157, 78, 223, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-text-main);
+            border: 2px solid var(--bg-tertiary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-tertiary);
+            border-color: var(--color-primary);
+        }
+
+        /* Title / Header section helper */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 22pt;
+            color: var(--color-text-main);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .section-header h2 span {
+            color: var(--color-primary);
+        }
+
+        .section-header p {
+            color: var(--color-text-muted);
+            font-size: 12pt;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Padding halaman universal */
+        section {
+            padding: 80px 0;
+        }
+
+        /* ==========================================================================
+           2. NAVBAR STYLES
+           ========================================================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(22, 16, 38, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(157, 78, 223, 0.1);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            display: table;
+            width: 100%;
+            height: 80px;
+        }
+
+        .logo-wrapper,
+        .nav-menu-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .logo-wrapper {
+            width: 30%;
+        }
+
+        .logo {
+            font-size: 16pt;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: var(--color-primary);
+        }
+
+        .nav-menu-wrapper {
+            width: 70%;
+            text-align: right;
+        }
+
+        .nav-menu {
+            display: inline-block;
+            list-style: none;
+        }
+
+        .nav-item {
+            display: inline-block;
+            margin-left: 32px;
+        }
+
+        .nav-link {
+            font-size: 11pt;
+            font-weight: 500;
+            color: var(--color-text-muted);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--color-primary);
+        }
+
+        /* Hamburger menu untuk mobile */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            float: right;
+            margin-top: 5px;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-text-main);
+            transition: var(--transition);
+        }
+
+        /* ==========================================================================
+           3. HERO SECTION
+           ========================================================================== */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 80px;
+            background: radial-gradient(circle at 80% 20%, rgba(157, 78, 223, 0.15) 0%, transparent 50%);
+        }
+
+        .hero-table {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .hero-cell {
+            display: table-cell;
+            vertical-align: middle;
+            width: 50%;
+        }
+
+        .hero-content {
+            padding-right: 40px;
+        }
+
+        .hero-headline {
+            font-size: 32pt;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero-headline span {
+            color: var(--color-primary);
+            display: block;
+        }
+
+        .hero-subheadline {
+            font-size: 12pt;
+            color: var(--color-text-muted);
+            margin-bottom: 35px;
+            max-width: 500px;
+        }
+
+        .hero-actions .btn {
+            margin-right: 16px;
+        }
+
+        .hero-image-wrapper {
+            text-align: center;
+        }
+
+        .hero-mockup {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(157, 78, 223, 0.15);
+            display: inline-block;
+            position: relative;
+        }
+
+        .hero-mockup img {
+            border-radius: var(--radius-md);
+            width: 100%;
+            height: auto;
+        }
+
+        /* ==========================================================================
+           4. WHY CHOOSE US SECTION (Keunggulan Card)
+           ========================================================================== */
+        .features {
+            background-color: rgba(22, 16, 38, 0.3);
+        }
+
+        .features-grid {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 20px 0;
+        }
+
+        .feature-card-cell {
+            display: table-cell;
+            width: 25%;
+        }
+
+        .feature-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(157, 78, 223, 0.3);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(157, 78, 223, 0.1);
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 20px auto;
+            line-height: 50px;
+            text-align: center;
+            color: var(--color-primary);
+            font-size: 16pt;
+            font-weight: bold;
+        }
+
+        .feature-card h3 {
+            font-size: 13pt;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 10pt;
+            color: var(--color-text-muted);
+        }
+
+        /* ==========================================================================
+           5. PRODUCT SECTION
+           ========================================================================== */
+        .products-grid {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 24px 0;
+        }
+
+        .product-card-cell {
+            display: table-cell;
+            width: 33.333%;
+        }
+
+        .product-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(157, 78, 223, 0.3);
+        }
+
+        .product-banner {
+            position: relative;
+            background-color: var(--bg-tertiary);
+            overflow: hidden;
+            aspect-ratio: 16/10;
+        }
+
+        .product-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 24px;
+        }
+
+        .product-title {
+            font-size: 14pt;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .product-desc {
+            font-size: 10pt;
+            color: var(--color-text-muted);
+            margin-bottom: 20px;
+            height: 48px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-meta {
+            display: table;
+            width: 100%;
+        }
+
+        .product-price-cell,
+        .product-action-cell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .product-price-cell {
+            text-align: left;
+        }
+
+        .product-action-cell {
+            text-align: right;
+        }
+
+        .product-price {
+            font-size: 15pt;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .product-card .btn {
+            padding: 10px 20px;
+            font-size: 11pt;
+        }
+
+        /* ==========================================================================
+           6. CTA CHECKOUT MODAL SECTION (Interaktif)
+           ========================================================================== */
+        .checkout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 7, 19, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            display: block;
+        }
+
+        .checkout-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-wrapper {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-cell {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            display: inline-block;
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 480px;
+            text-align: left;
+            box-shadow: var(--shadow-smooth);
+            border: 1px solid rgba(157, 78, 223, 0.2);
+            position: relative;
+            animation: modalScale 0.3s ease forwards;
+        }
+
+        @keyframes modalScale {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 14pt;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: transparent;
+            border: none;
+            color: var(--color-text-muted);
+            font-size: 16pt;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--color-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* Order Review Item */
+        .order-summary-box {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px dashed rgba(157, 78, 223, 0.3);
+        }
+
+        .summary-row {
+            display: table;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .summary-row:last-child {
+            margin-bottom: 0;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-label,
+        .summary-value {
+            display: table-cell;
+        }
+
+        .summary-label {
+            color: var(--color-text-muted);
+            font-size: 10pt;
+            text-align: left;
+        }
+
+        .summary-value {
+            text-align: right;
+            font-weight: 600;
+            font-size: 11pt;
+        }
+
+        .summary-value.total-amount {
+            color: var(--color-primary);
+            font-size: 13pt;
+            font-weight: 700;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 10pt;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--color-text-muted);
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            color: var(--color-text-main);
+            font-family: var(--font-sans);
+            font-size: 11pt;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 10px rgba(157, 78, 223, 0.2);
+        }
+
+        .form-input[readonly] {
+            background-color: rgba(22, 16, 38, 0.5);
+            color: var(--color-text-muted);
+            cursor: not-allowed;
+        }
+
+        .btn-submit {
+            width: 100%;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        /* Spinner Loading */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffffff;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-submit.loading .spinner {
+            display: inline-block;
+        }
+
+        .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        /* ==========================================================================
+           7. FAQ SECTION
+           ========================================================================== */
+        .faq {
+            background-color: rgba(22, 16, 38, 0.3);
+        }
+
+        .faq-list {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-question {
+            padding: 20px 24px;
+            font-size: 12pt;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16pt;
+            color: var(--color-primary);
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-question::after {
+            content: '−';
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 24px;
+            color: var(--color-text-muted);
+            font-size: 10.5pt;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            /* Nilai aman untuk animasi transisi CSS murni */
+            padding-bottom: 20px;
+        }
+
+        /* ==========================================================================
+           8. FOOTER SECTION
+           ========================================================================== */
+        .footer {
+            background-color: #07040d;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: center;
+        }
+
+        .footer-brand {
+            font-size: 14pt;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .footer-brand span {
+            color: var(--color-primary);
+        }
+
+        .footer-legal {
+            font-size: 9pt;
+            color: var(--color-text-muted);
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+        }
+
+        .footer-copyright {
+            font-size: 9.5pt;
+            color: rgba(166, 159, 181, 0.6);
+        }
+
+        /* ==========================================================================
+           9. RESPONSIVE DESIGN (MEDIA QUERIES)
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .hero-headline {
+                font-size: 26pt;
+            }
+
+            .features-grid,
+            .products-grid {
+                display: block;
+                border-spacing: 0;
+            }
+
+            .feature-card-cell,
+            .product-card-cell {
+                display: block;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .feature-card-cell:last-child,
+            .product-card-cell:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+
+            .section-header {
+                margin-bottom: 35px;
+            }
+
+            /* Navbar Mobile */
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-menu-wrapper {
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: var(--bg-secondary);
+                text-align: left;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease;
+                border-bottom: 0 solid rgba(157, 78, 223, 0.1);
+            }
+
+            .nav-menu-wrapper.open {
+                max-height: 300px;
+                border-bottom-width: 1px;
+            }
+
+            .nav-menu {
+                display: block;
+                padding: 20px 24px;
+            }
+
+            .nav-item {
+                display: block;
+                margin-left: 0;
+                margin-bottom: 16px;
+            }
+
+            .nav-item:last-child {
+                margin-bottom: 0;
+            }
+
+            /* Hero Mobile */
+            .hero {
+                padding-top: 120px;
+            }
+
+            .hero-table {
+                display: block;
+            }
+
+            .hero-cell {
+                display: block;
+                width: 100%;
+            }
+
+            .hero-content {
+                padding-right: 0;
+                text-align: center;
+                margin-bottom: 40px;
+            }
+
+            .hero-subheadline {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-actions .btn {
+                margin: 6px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==========================================================================
+       1. NAVBAR
+       ========================================================================== -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo-wrapper">
+                    <a href="#" class="logo">Raffasyafara<span>Store</span></a>
+                </div>
+                <div class="nav-menu-wrapper" id="navMenuWrapper">
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+                        <li class="nav-item"><a href="#produk" class="nav-link">Produk</a></li>
+                        <li class="nav-item"><a href="#faq" class="nav-link">FAQ</a></li>
+                        <li class="nav-item"><a href="#kontak" class="nav-link">Kontak</a></li>
+                    </ul>
+                </div>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==========================================================================
+       2. HERO SECTION
+       ========================================================================== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-table">
+                <div class="hero-cell">
+                    <div class="hero-content">
+                        <h1 class="hero-headline">Pusat Aset & <span>Produk Digital</span> Premium</h1>
+                        <p class="hero-subheadline">Tingkatkan produktivitas Anda sekarang juga dengan ekosistem produk
+                            digital berkualitas tinggi. Sekali bayar, nikmati akses penuh tanpa batas selamanya.</p>
+                        <div class="hero-actions">
+                            <a href="#produk" class="btn btn-primary">Lihat Produk</a>
+                            <a href="#produk" class="btn btn-secondary">Beli Sekarang</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-cell">
+                    <div class="hero-image-wrapper">
+                        <div class="hero-mockup">
+                            <img src="https://placehold.net/default.png" alt="Raffasyafara Product Mockup" width="500"
+                                height="300">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+       3. MENGAPA MEMILIH KAMI SECTION
+       ========================================================================== -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Mengapa Memilih <span>Kami</span></h2>
+                <p>Kualitas dan kenyamanan Anda dalam berbelanja produk digital adalah prioritas utama kami.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card-cell">
+                    <div class="feature-card">
+                        <div class="feature-icon">✓</div>
+                        <h3>Produk Digital Berkualitas</h3>
+                        <p>Seluruh materi dan aset digital dikurasi secara ketat oleh tim ahli untuk menjamin kualitas
+                            standar industri.</p>
+                    </div>
+                </div>
+                <div class="feature-card-cell">
+                    <div class="feature-card">
+                        <div class="feature-icon">∞</div>
+                        <h3>Sekali Beli, Akses Selamanya</h3>
+                        <p>Tidak ada biaya langganan bulanan yang tersembunyi. Cukup satu kali transaksi, produk menjadi
+                            milik Anda seutuhnya.</p>
+                    </div>
+                </div>
+                <div class="feature-card-cell">
+                    <div class="feature-card">
+                        <div class="feature-icon">★</div>
+                        <h3>Cocok untuk Pemula</h3>
+                        <p>Dilengkapi dengan panduan lengkap, dokumentasi, langkah demi langkah yang sangat mudah
+                            dipahami pemula.</p>
+                    </div>
+                </div>
+                <div class="feature-card-cell">
+                    <div class="feature-card">
+                        <div class="feature-icon">$</div>
+                        <h3>Hemat & Ramah Lingkungan</h3>
+                        <p>Tanpa ongkos kirim fisik dan mengurangi jejak karbon. Instan dikirim langsung menuju
+                            perangkat elektronik Anda.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+       4. PRODUCT SECTION
+       ========================================================================== -->
+    <section id="produk" class="products">
+        <div class="container">
+            <div class="section-header">
+                <h2>Katalog Produk <span>E-Learning Premium</span></h2>
+                <p>Pilih produk digital eksklusif di bawah ini dan mulai pelajari masterclass komprehensif sekarang
+                    juga.</p>
+            </div>
+
+            <div class="products-grid">
+                <!-- Produk 1: Masterclass Kopi -->
+                <div class="product-card-cell">
+                    <div class="product-card">
+                        <div class="product-banner">
+                            <img src="https://placehold.net/default.png" alt="E-Book Premium Masterclass Kopi"
+                                width="360" height="225">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">E-Book Premium Masterclass Kopi</h3>
+                            <p class="product-desc">Panduan esensial meracik kopi berkualitas barista internasional
+                                langsung dari dapur rumah Anda sendiri.</p>
+                            <div class="product-meta">
+                                <div class="product-price-cell">
+                                    <span class="product-price">Rp 50.000</span>
+                                </div>
+                                <div class="product-action-cell">
+                                    <button class="btn btn-primary btn-buy" data-id="PROD-KOPI"
+                                        data-name="E-Book Premium Masterclass Kopi" data-price="50000">Beli</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 2: Video Kursus Keripik -->
+                <div class="product-card-cell">
+                    <div class="product-card">
+                        <div class="product-banner">
+                            <img src="https://placehold.net/default.png" alt="Video Kursus Rahasia Keripik Renyah"
+                                width="360" height="225">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Video Kursus Rahasia Keripik Renyah</h3>
+                            <p class="product-desc">Pelajari langkah memproduksi keripik skala rumahan yang renyah tahan
+                                lama tanpa pengawet buatan.</p>
+                            <div class="product-meta">
+                                <div class="product-price-cell">
+                                    <span class="product-price">Rp 75.000</span>
+                                </div>
+                                <div class="product-action-cell">
+                                    <button class="btn btn-primary btn-buy" data-id="PROD-KRIPIK"
+                                        data-name="Video Kursus Rahasia Keripik Renyah" data-price="75000">Beli</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 3: Paket Bundling Digital -->
+                <div class="product-card-cell">
+                    <div class="product-card">
+                        <div class="product-banner">
+                            <img src="https://placehold.net/default.png" alt="Paket Bundling Kuliner Digital"
+                                width="360" height="225">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Paket Bundling Kuliner Digital</h3>
+                            <p class="product-desc">Gabungan materi masterclass kopi dan kursus rahasia keripik renyah
+                                dengan harga jauh lebih hemat.</p>
+                            <div class="product-meta">
+                                <div class="product-price-cell">
+                                    <span class="product-price">Rp 100.000</span>
+                                </div>
+                                <div class="product-action-cell">
+                                    <button class="btn btn-primary btn-buy" data-id="PROD-BUNDLE"
+                                        data-name="Paket Bundling Kuliner Digital" data-price="100000">Beli</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+       5 & 6. INTERACTIVE CHECKOUT MODAL & INTEGRASI MIDTRANS
+       ========================================================================== -->
+    <div class="checkout-modal" id="checkoutModal">
+        <div class="modal-wrapper">
+            <div class="modal-cell">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Formulir Pembayaran Aman</h3>
+                        <button class="modal-close" id="modalClose">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Ringkasan Produk yang Dipilih -->
+                        <div class="order-summary-box">
+                            <div class="summary-row">
+                                <div class="summary-label">Nama Item</div>
+                                <div class="summary-value" id="summaryProductName">-</div>
+                            </div>
+                            <div class="summary-row">
+                                <div class="summary-label">Order ID</div>
+                                <div class="summary-value" id="summaryOrderId"
+                                    style="font-family: monospace; font-size: 9.5pt;">-</div>
+                            </div>
+                            <div class="summary-row">
+                                <div class="summary-label">Total Pembayaran</div>
+                                <div class="summary-value total-amount" id="summaryTotalAmount">Rp 0</div>
+                            </div>
+                        </div>
+
+                        <!-- Form Checkout -->
+                        <form id="checkoutForm" onsubmit="executePayment(event)">
+                            <!-- Hidden / Readonly Inputs sesuai kebutuhan teknis data transaksi -->
+                            <input type="hidden" id="inputProductId">
+                            <input type="hidden" id="inputProductName">
+                            <input type="hidden" id="inputOrderId">
+                            <input type="hidden" id="inputGrossAmount">
+
+                            <div class="form-group">
+                                <label class="form-label" for="customerEmail">Alamat Email Aktif</label>
+                                <input type="email" id="customerEmail" class="form-input" placeholder="contoh@email.com"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="customerPhone">Nomor WhatsApp / HP</label>
+                                <input type="tel" id="customerPhone" class="form-input" placeholder="081234567890"
+                                    pattern="[0-9]{9,15}" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-submit" id="btnPayNow">
+                                <span class="spinner"></span>
+                                <span class="btn-text">Bayar Sekarang</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       7. FAQ SECTION
+       ========================================================================== -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Pertanyaan yang <span>Sering Diajukan</span></h2>
+                <p>Temukan jawaban instan seputar operasional, keaslian, dan cara akses aset digital kami.</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">Bagaimana cara saya mengakses produk digital setelah melakukan pembayaran?
+                    </div>
+                    <div class="faq-answer">
+                        Setelah status transaksi Anda berhasil diverifikasi oleh sistem Midtrans secara otomatis, sistem
+                        kami akan langsung mengirimkan link unduhan dan hak akses file produk digital premium menuju
+                        alamat email yang telah Anda isi pada form checkout.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Apakah metode pembayaran yang tersedia di toko digital ini?</div>
+                    <div class="faq-answer">
+                        Melalui integrasi Snap Midtrans, kami menerima berbagai macam metode pembayaran digital yang
+                        sangat fleksibel mulai dari QRIS (GoPay, OVO, Dana, LinkAja), Virtual Account Bank Transfer
+                        (BCA, Mandiri, BNI, BRI), hingga kartu kredit maupun debit berlogo Visa/Mastercard.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Apakah saya bisa meminta pengembalian dana jika tidak puas?</div>
+                    <div class="faq-answer">
+                        Karena produk ini bersifat aset digital yang langsung dapat diunduh dan disalin secara instan,
+                        kami menerapkan kebijakan bahwa semua pembelian bersifat final dan tidak dapat dikembalikan dana
+                        (non-refundable), kecuali terdapat kesalahan teknis fatal berkepanjangan pada file utama kami.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+       8. FOOTER SECTION
+       ========================================================================== -->
+    <footer id="kontak" class="footer">
+        <div class="container">
+            <div class="footer-brand">Raffasyafara<span>Store</span></div>
+            <p class="footer-legal">Raffasyafara Store merupakan platform e-commerce terpercaya yang menyediakan
+                berbagai materi edukasi kuliner, aset kreatif, serta solusi lisensi produk digital berkualitas tinggi di
+                Indonesia.</p>
+            <p class="footer-copyright">&copy; 2026 Raffasyafara Store. All Rights Reserved. Seluruh transaksi diproses
+                dengan enkripsi aman oleh Midtrans Sandbox.</p>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+       JAVASCRIPT VANILLA LOGIC
+       ========================================================================== -->
+    <script>
+        /* --------------------------------------------------------------------------
+           A. KONFIGURASI PENTING MIDTRANS SANDBOX (UNTUK DEVELOPER)
+           -------------------------------------------------------------------------- */
+        // CATATAN UNTUK DEVELOPER:
+        // 1. Pastikan Anda memasukkan CLIENT KEY Sandbox Anda pada tag <script> Midtrans di baris ke 7 file ini: data-client-key="MASUKKAN_CLIENT_KEY"
+        // 2. SERVER KEY digunakan pada request header Authorization (Harus diubah menjadi Base64 encoded).
+        // PERINGATAN KEAMANAN: Melakukan request Snap Token langsung dari Frontend (Client-side) tidak disarankan pada production karena mengekspos Server Key Anda. Gunakan cara ini KHUSUS untuk keperluan demo, prototyping, Sandbox, atau lingkungan lokal.
+
+        const MIDTRANS_CONFIG = {
+            serverKey: "Masukkan_Server_Key_Sandbox_Anda_Disini", // Contoh: SB-Mid-server-XXXXXX
+            clientKey: "Masukkan_Client_Key_Sandbox_Anda_Disini", // Contoh: SB-Mid-client-XXXXXX
+            // Menggunakan corsproxy.io sesuai instruksi teknis tanpa tanda tanya (?)
+            proxyEndpoint: "https://corsproxy.io/https://app.sandbox.midtrans.com/snap/v1/transactions"
+        };
+
+
+        /* --------------------------------------------------------------------------
+           B. MOBILE NAVBAR & RESPONSIVE TOGGLE LOGIC
+           -------------------------------------------------------------------------- */
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenuWrapper = document.getElementById('navMenuWrapper');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        menuToggle.addEventListener('click', () => {
+            navMenuWrapper.classList.toggle('open');
+        });
+
+        // Menutup menu mobile saat link navigasi diklik
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                navMenuWrapper.classList.remove('open');
+            });
+        });
+
+
+        /* --------------------------------------------------------------------------
+           C. INTERAKTIF CHECKOUT MODAL LOGIC
+           -------------------------------------------------------------------------- */
+        const checkoutModal = document.getElementById('checkoutModal');
+        const modalClose = document.getElementById('modalClose');
+        const buyButtons = document.querySelectorAll('.btn-buy');
+
+        // Form fields DOM element reference
+        const summaryProductName = document.getElementById('summaryProductName');
+        const summaryOrderId = document.getElementById('summaryOrderId');
+        const summaryTotalAmount = document.getElementById('summaryTotalAmount');
+
+        const inputProductId = document.getElementById('inputProductId');
+        const inputProductName = document.getElementById('inputProductName');
+        const inputOrderId = document.getElementById('inputOrderId');
+        const inputGrossAmount = document.getElementById('inputGrossAmount');
+
+        // Menangani Event Tombol Beli di Klik
+        buyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const prodId = button.getAttribute('data-id');
+                const prodName = button.getAttribute('data-name');
+                const prodPrice = parseInt(button.getAttribute('data-price'));
+
+                // Otomatis membuat Order ID Unik: DE- + timestamp milidetik
+                const timestamp = Date.now();
+                const generatedOrderId = `DE-${timestamp}`;
+
+                // Set Nilai Visual Ringkasan Modal
+                summaryProductName.innerText = prodName;
+                summaryOrderId.innerText = generatedOrderId;
+                summaryTotalAmount.innerText = formatRupiah(prodPrice);
+
+                // Set Nilai Input Tersembunyi (Hidden / Readonly)
+                inputProductId.value = prodId;
+                inputProductName.value = prodName;
+                inputOrderId.value = generatedOrderId;
+                inputGrossAmount.value = prodPrice;
+
+                // Tampilkan Modal dengan menambahkan class 'active'
+                checkoutModal.classList.add('active');
+            });
+        });
+
+        // Menutup Modal via tombol close (X)
+        modalClose.addEventListener('click', () => {
+            checkoutModal.classList.remove('active');
+        });
+
+        // Menutup Modal via klik di luar area card kontainer utama
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target === checkoutModal || e.target.classList.contains('modal-wrapper') || e.target.classList.contains('modal-cell')) {
+                checkoutModal.classList.remove('active');
+            }
+        });
+
+        // Helper fungsi format rupiah sederhana
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toLocaleString('id-ID');
+        }
+
+
+        /* --------------------------------------------------------------------------
+           D. INTEGRASI INTEGRAL API SNAP MIDTRANS (FRONTEND-ONLY)
+           -------------------------------------------------------------------------- */
+        function executePayment(event) {
+            event.preventDefault(); // Mencegah reload halaman bawaan form browser
+
+            const btnPayNow = document.getElementById('btnPayNow');
+            const emailValue = document.getElementById('customerEmail').value;
+            const phoneValue = document.getElementById('customerPhone').value;
+
+            // Ambil data transaksi yang tersimpan di form fields
+            const pId = inputProductId.value;
+            const pName = inputProductName.value;
+            const pOrderId = inputOrderId.value;
+            const pGrossAmount = parseInt(inputGrossAmount.value);
+
+            // Aktifkan animasi loading spinner pada button
+            btnPayNow.classList.add('loading');
+            btnPayNow.disabled = true;
+
+            // Membangun Payload JSON Transaksi Midtrans Snap secara presisi
+            const payload = {
+                transaction_details: {
+                    order_id: pOrderId,
+                    gross_amount: pGrossAmount
+                },
+                item_details: [
+                    {
+                        id: pId,
+                        price: pGrossAmount,
+                        quantity: 1,
+                        name: pName.substring(0, 50) // Membatasi max string length nama produk sesuai limit Midtrans
+                    }
+                ],
+                customer_details: {
+                    email: emailValue,
+                    phone: phoneValue
+                }
+            };
+
+            // Mengonversi Server Key ke format Base64 untuk HTTP Basic Authentication Header
+            // PERHATIAN: Di sistem produksi backend, gunakan library btoa() atau Buffer pada Node.js/PHP.
+            const base64AuthKey = btoa(MIDTRANS_CONFIG.serverKey + ":");
+
+            // Eksekusi HTTP Request ke Midtrans Snap melalui proxy CORS yang ditentukan
+            fetch(MIDTRANS_CONFIG.proxyEndpoint, {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Basic " + base64AuthKey
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("HTTP Error status: " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Matikan animasi loading spinner
+                    btnPayNow.classList.remove('loading');
+                    btnPayNow.disabled = false;
+
+                    // Memastikan server Midtrans mengembalikan snap token dengan benar
+                    if (data && data.token) {
+                        // Tutup modal form checkout sesaat sebelum jendela snap muncul
+                        checkoutModal.classList.remove('active');
+
+                        // Reset isi form inputan kontak
+                        document.getElementById('checkoutForm').reset();
+
+                        // Panggil fungsi SDK utama dari script snap.js Midtrans Sandbox bawaan
+                        window.snap.pay(data.token, {
+                            onSuccess: function (result) {
+                                alert("Pembayaran Berhasil! Terima kasih. Status: " + result.status_message);
+                                console.log(result);
+                            },
+                            onPending: function (result) {
+                                alert("Menunggu Pembayaran! Silakan selesaikan tagihan Anda. Status: " + result.status_message);
+                                console.log(result);
+                            },
+                            onError: function (result) {
+                                alert("Pembayaran Gagal atau Terjadi Kesalahan! Silakan coba lagi.");
+                                console.log(result);
+                            },
+                            onClose: function () {
+                                alert("Anda menutup halaman pop-up pembayaran sebelum menyelesaikan transaksi.");
+                            }
+                        });
+                    } else {
+                        alert("Gagal mendapatkan Snap Token dari Midtrans. Periksa apakah Server Key yang Anda masukkan pada kode JavaScript sudah benar dan valid.");
+                        console.error("Payload respons tidak valid:", data);
+                    }
+                })
+                .catch(error => {
+                    btnPayNow.classList.remove('loading');
+                    btnPayNow.disabled = false;
+
+                    alert("Terjadi kegagalan koneksi API / CORS Error ke Server Midtrans Sandbox. Pastikan Server Key Anda di dalam script sudah diisi dengan benar.");
+                    console.error("Detail Error Fetch Midtrans:", error);
+                });
+        }
+
+
+        /* --------------------------------------------------------------------------
+           E. FAQ ACCORDION INTERACTIVE LOGIC
+           -------------------------------------------------------------------------- */
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+
+                // Menutup faq item lain yang sedang terbuka (Mode Squeeze Accordion)
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    if (i !== item) i.classList.remove('active');
+                });
+
+                // Toggle status aktif item saat ini
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
+index.html
+Displaying index.html.
